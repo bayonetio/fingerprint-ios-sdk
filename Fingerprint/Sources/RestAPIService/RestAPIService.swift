@@ -16,8 +16,13 @@ public class RestAPIService: IRestAPIService {
 
     /// 
     public init(withAPIKey apiKey: String) throws {
+        if apiKey.count < 1 {
+            throw RestAPIServiceErrors.InitError(message: "The API key cannot be empty")
+        }
+
         self.apiKey = apiKey
 
+        /// TODO: Refactor the base url by environment
         var baseURL: String = developmentBaseURL
         if let environment: String = ProcessInfo.processInfo.environment["ENVIRONMENT"] {
             switch environment {

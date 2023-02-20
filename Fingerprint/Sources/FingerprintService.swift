@@ -5,7 +5,7 @@ public enum Errors: Error {
     case GeneralError
 }
 
-/// 
+/// The fingerprint service to generate device's fingerprint
 public class FingerprintService: IFingerprintService {
     private var restAPIService: IRestAPIService
 

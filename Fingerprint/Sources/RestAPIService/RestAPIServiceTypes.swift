@@ -59,7 +59,8 @@ public struct TRestAPIToken: Codable {
     }
 }
 
-public enum RestAPIServiceErrors: Error {
+public enum RestAPIServiceErrors: Error, Equatable {
+    case InitError(message: String)
     case URLError
     case NetworkError
     case RequestError

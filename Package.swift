@@ -13,20 +13,23 @@ let package: Package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/httpswift/swifter.git", from: "1.5.0")
     ],
     targets: [
-        .executableTarget(
-            name: "App",
-            dependencies: [
-                "Fingerprint"
-            ]),
         .target(
             name: "Fingerprint",
             dependencies: [],
             path: "Fingerprint"),
         .testTarget(
             name: "FingerprintTest",
-            dependencies: ["Fingerprint"]),
+            dependencies: [
+                "Fingerprint",
+                .product(name: "Swifter", package: "swifter")
+            ]),
+        .executableTarget(
+            name: "App",
+            dependencies: [
+                "Fingerprint"
+            ]),
     ]
 )
