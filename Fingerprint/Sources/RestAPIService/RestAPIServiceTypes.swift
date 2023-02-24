@@ -41,7 +41,12 @@ public struct TRestAPIToken: Codable {
 
         // Assign the basic values
         bayonetID = try tokenBayonetContainer.decode(String.self, forKey: .bayonetID)
-        environment = try tokenBayonetContainer.decode(String.self, forKey: .environment)
+        do {
+            environment = try tokenBayonetContainer.decode(String.self, forKey: .environment)
+        } catch {
+            environment = nil
+        }
+
 
         // Assign the nested values
         let servicesContainer = try tokenBayonetContainer.nestedContainer(keyedBy: TRestAPIToken.ServicesNestedKey.self, forKey: .services)
@@ -64,6 +69,11 @@ public enum RestAPIServiceErrors: Error, Equatable {
     case URLError
     case NetworkError
     case RequestError
+    case ServerError
+    case TransformBodyResponseError(message: String)
+    case ResponseBodyIsEmptyError
+    case UnknwonError
+    case UnauthorizedError
 }
 
 public protocol IRestAPIService {

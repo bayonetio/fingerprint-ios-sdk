@@ -3,6 +3,7 @@ import FoundationNetworking
 
 let liveEnvironment: String = "live"
 let stagingEnvironment: String = "staging"
+let testEnvironment: String = "test"
 
 let developmentBaseURL: String = "http://localhost:9000/v3"
 
@@ -27,14 +28,17 @@ public class RestAPIService: IRestAPIService {
         if let environment: String = ProcessInfo.processInfo.environment["ENVIRONMENT"] {
             switch environment {
                 case liveEnvironment:
-                    baseURL = "https://staging.bayonet.io/v3"
+                    baseURL = "https://live.bayonet.io/v3"
                 case stagingEnvironment:
-                    baseURL = "https://bayonet.io/v3"
+                    baseURL = "https://staging.bayonet.io/v3"
+                case testEnvironment:
+                    baseURL = "http://localhost:8080/v3"
                 default:
                     baseURL = developmentBaseURL
             }
         }
 
+        // Prepare the url for token generator
         guard let url: URL = URL(string: "\(baseURL)/token") else {
             throw RestAPIServiceErrors.URLError
         }
@@ -47,22 +51,42 @@ public class RestAPIService: IRestAPIService {
     public func getToken() async throws -> TRestAPIToken {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<TRestAPIToken, Error>) in
             let tokenRequest: URLRequest = self.setupRequest(url: self.tokenURL)
-            URLSession.shared.dataTask(with: tokenRequest) { (data: Data?, tokenResponse: URLResponse?, error: Error?) in
+            let task: URLSessionDataTask = URLSession.shared.dataTask(with: tokenRequest) { (data: Data?, tokenResponse: URLResponse?, error: Error?) in
+                var currentError: Error? = nil
+                var restAPIToken: TRestAPIToken? = nil
                 if let tokenResponse: HTTPURLResponse = tokenResponse as? HTTPURLResponse {
-                    // The token was generated
-                    if 200 == tokenResponse.statusCode {
-                        if let data: Data = data {
-                            let decoder: JSONDecoder = JSONDecoder()
-                            do {
-                                let response: TRestAPIToken = try decoder.decode(TRestAPIToken.self, from: data)
-                                continuation.resume(returning: response)
-                            } catch {
-                                continuation.resume(throwing: error)
+                    switch tokenResponse.statusCode {
+                        case 401:
+                            currentError = RestAPIServiceErrors.UnauthorizedError
+                        case 400...499:
+                            currentError = RestAPIServiceErrors.RequestError
+                        case 500...599:
+                            currentError = RestAPIServiceErrors.ServerError
+                        case 200:
+                            if let data: Data = data {
+                                let decoder: JSONDecoder = JSONDecoder()
+                                do {
+                                    restAPIToken = try decoder.decode(TRestAPIToken.self, from: data)
+                                } catch {
+                                    currentError = RestAPIServiceErrors.TransformBodyResponseError(message: error.localizedDescription)
+                                }
+                            } else {
+                                currentError = RestAPIServiceErrors.ResponseBodyIsEmptyError
                             }
-                        }
+                        default:
+                            currentError = RestAPIServiceErrors.UnknwonError
                     }
                 }
-            }.resume()
+
+                if let restAPIToken: TRestAPIToken = restAPIToken {
+                    continuation.resume(returning: restAPIToken)
+                } else if let currentError: Error = currentError {
+                    continuation.resume(throwing: currentError)
+                } else {
+                    continuation.resume(throwing: RestAPIServiceErrors.UnknwonError)
+                }
+            }
+            task.resume()
         }
     }
 
