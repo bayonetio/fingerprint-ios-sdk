@@ -1,5 +1,8 @@
 import Foundation
+
+#if canImport(FoundationNetworking)
 import FoundationNetworking
+#endif
 
 let liveEnvironment: String = "live"
 let stagingEnvironment: String = "staging"
@@ -8,7 +11,7 @@ let testEnvironment: String = "test"
 let developmentBaseURL: String = "http://localhost:9000/v3"
 
 /// The service to connect to the Rest API
-public class RestAPIService: IRestAPIService {
+public class RestAPIService: RestAPIServiceProtocol {
     // The user API Key to consume the Rest API service
     private var apiKey: String
 

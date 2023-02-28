@@ -29,10 +29,5 @@ let package: Package = Package(
                 "Fingerprint",
                 .product(name: "Swifter", package: "swifter")
             ]),
-        .executableTarget(
-            name: "App",
-            dependencies: [
-                "Fingerprint"
-            ]),
     ]
 )

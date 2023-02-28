@@ -6,11 +6,7 @@ import Swifter
 let mockServer: HttpServer = HttpServer()
 
 final class RestAPIServiceTests: XCTestCase {
-    // private let mockServer: HttpServer = HttpServer()
-
     override class func setUp() {
-        
-                
         mockServer["/v3/token"] = { (rqst: HttpRequest) in
             let authorizationRequestHeader: [String : String] = rqst.headers.filter { $0.key == "authorization" }
             if let authorization: String =  authorizationRequestHeader["authorization"] {

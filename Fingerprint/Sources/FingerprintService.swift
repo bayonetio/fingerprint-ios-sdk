@@ -1,34 +1,40 @@
 import Foundation
-import FoundationNetworking
 
-public enum Errors: Error {
-    case GeneralError
-}
+import FingerprintPro
 
-/// The fingerprint service to generate device's fingerprint
-public class FingerprintService: IFingerprintService {
-    private var restAPIService: IRestAPIService
+public struct FingerprintService: FingerprintServiceProtocol {
+    private var restAPIService: RestAPIServiceProtocol
 
-    public init(withAPIKey apiKey: String) throws {
-        do {
-            let restAPIService: IRestAPIService = try RestAPIService(withAPIKey: apiKey)
-
-            self.restAPIService = restAPIService
-        } catch {
-            throw error
-        }
+    public init(apiKey: String) throws {
+        let restAPIService = try RestAPIService(withAPIKey: apiKey)
+        self.restAPIService = restAPIService
     }
-
+    
+    @available(iOS 13, *)
+    @available(macOS 10.15, *)
     public func getToken() async throws -> Token {
+        // 
         let restAPIToken: TRestAPIToken = try await self.restAPIService.getToken()
 
-        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Token, Error>) in
-            let token: Token = Token(
-                bayonetID: restAPIToken.bayonetID, 
-                environment: restAPIToken.environment
-            )
+        let fingerprintproService = FingerprintProFactory.getInstance(restAPIToken.services.fingerprintjs.apiKey)
+        do {
+            var metadata = Metadata()
+            metadata.setTag(restAPIToken.bayonetID, forKey: "browserToken")
+            if let environment: String = restAPIToken.environment {
+                metadata.setTag(environment, forKey: "environment")
+            }
 
-            continuation.resume(returning: token)
+            let fingerprintproDeviceID = try await fingerprintproService.getVisitorId(metadata)
+        } catch {
+            print("error", error as Any)
         }
+
+        // Build the token
+        let token: Token = Token(
+            bayonetID: restAPIToken.bayonetID,
+            environment: restAPIToken.environment
+        )
+
+        return token
     }
 }

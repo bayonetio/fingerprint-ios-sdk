@@ -76,6 +76,6 @@ public enum RestAPIServiceErrors: Error, Equatable {
     case UnauthorizedError
 }
 
-public protocol IRestAPIService {
+public protocol RestAPIServiceProtocol {
     func getToken() async throws -> TRestAPIToken
 }
