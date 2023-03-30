@@ -15,8 +15,7 @@ public class RestAPIService: RestAPIServiceProtocol {
     // The user API Key to consume the Rest API service
     private var apiKey: String
 
-    // The Rest API URLs
-    let tokenURL: URL
+    private let baseURL: String
 
     /// 
     public init(withAPIKey apiKey: String) throws {
@@ -41,11 +40,10 @@ public class RestAPIService: RestAPIServiceProtocol {
             }
         }
 
-        // Prepare the url for token generator
-        guard let url: URL = URL(string: "\(baseURL)/token") else {
-            throw RestAPIServiceErrors.URLError
+        guard let _: URL = URL(string: "\(baseURL)") else {
+            throw RestAPIServiceErrors.URLError(message: "base")
         }
-        self.tokenURL = url
+        self.baseURL = baseURL
     }
 
     /// Fetch a token from the Rest API service
@@ -53,7 +51,13 @@ public class RestAPIService: RestAPIServiceProtocol {
     /// - returns: A TRestAPIToken
     public func getToken() async throws -> TRestAPIToken {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<TRestAPIToken, Error>) in
-            let tokenRequest: URLRequest = self.setupRequest(url: self.tokenURL)
+            // Prepare the url for token generator
+            guard let tokenURL: URL = URL(string: "\(baseURL)/token") else {
+                continuation.resume(throwing: RestAPIServiceErrors.URLError(message: "Invalid token url"))
+                return
+            }
+
+            let tokenRequest: URLRequest = self.setupRequest(url: tokenURL)
             let task: URLSessionDataTask = URLSession.shared.dataTask(with: tokenRequest) { (data: Data?, tokenResponse: URLResponse?, error: Error?) in
                 var currentError: Error? = nil
                 var restAPIToken: TRestAPIToken? = nil
@@ -93,14 +97,53 @@ public class RestAPIService: RestAPIServiceProtocol {
         }
     }
 
+    public func refresh(token: Token) async throws -> Bool {
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Bool, Error>) in
+            // Prepare the url to refresh
+            guard let refreshTokenURL: URL = URL(string: "\(self.baseURL)/refresh/\(token.bayonetID)") else {
+                continuation.resume(throwing: RestAPIServiceErrors.URLError(message: "Invalid refresh url"))
+                return
+            }
+            let tokenRequest: URLRequest = self.setupRequest(url: refreshTokenURL, method: "POST")
+
+            let task: URLSessionDataTask = URLSession.shared.dataTask(with: tokenRequest) { (data: Data?, tokenResponse: URLResponse?, error: Error?) in
+                var currentError: Error? = nil
+                if let tokenResponse: HTTPURLResponse = tokenResponse as? HTTPURLResponse {
+                    switch tokenResponse.statusCode {
+                        case 401:
+                            currentError = RestAPIServiceErrors.UnauthorizedError
+                            break
+                        case 400...499:
+                            currentError = RestAPIServiceErrors.RequestError
+                            break
+                        case 500...599:
+                            currentError = RestAPIServiceErrors.ServerError
+                            break
+                        case 200:
+                            break
+                        default:
+                            currentError = RestAPIServiceErrors.UnknwonError
+                    }
+                }
+
+                if let err: Error = currentError {
+                    continuation.resume(throwing: err)
+                } else {
+                    continuation.resume(returning: true)
+                }
+            }
+            task.resume()
+        }
+    }
+
     /// Prepare a request to use the Rest API service
     /// 
     /// - parameter url: the url
     /// 
     /// - returns: an URLRequest
-    private func setupRequest(url: URL) -> URLRequest {
+    private func setupRequest(url: URL, method: String = "GET") -> URLRequest {
         var request: URLRequest = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = method
         request.addValue("Bearer \(self.apiKey)", forHTTPHeaderField: "Authorization")
 
         return request

@@ -66,7 +66,7 @@ public struct TRestAPIToken: Codable {
 
 public enum RestAPIServiceErrors: Error, Equatable {
     case InitError(message: String)
-    case URLError
+    case URLError(message: String)
     case NetworkError
     case RequestError
     case ServerError
@@ -78,4 +78,5 @@ public enum RestAPIServiceErrors: Error, Equatable {
 
 public protocol RestAPIServiceProtocol {
     func getToken() async throws -> TRestAPIToken
+    func refresh(token: Token) async throws -> Bool
 }
