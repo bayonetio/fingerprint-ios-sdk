@@ -14,14 +14,18 @@ public struct FingerprintService: FingerprintServiceProtocol {
         self.restAPIService = restAPIService
     }
     
-    @available(iOS 13, *)
-    @available(macOS 10.15, *)
+    @available(iOS 15.0, *)
     public func analize() async throws -> Token {
         var token: Token
 
         if let storedToken: Token = self.getTokenStored() {
             // Refresh a stored device fingerprint
-            let _: Bool = try await self.restAPIService.refresh(token: storedToken)
+            do {
+                let _: Bool = try await self.restAPIService.refresh(token: storedToken)
+            } catch {
+                print("error on refresh \(error)")
+            }
+            
             token = storedToken
         } else {
             // Generate a new device fingerprint

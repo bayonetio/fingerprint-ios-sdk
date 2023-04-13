@@ -5,11 +5,24 @@ import PackageDescription
 
 let package: Package = Package(
     name: "fingerprint-ios-sdk",
+    platforms: [
+        .iOS(.v13),
+    ],
     products: [
         .library(
             name: "Fingerprint",
-            targets: ["Fingerprint"]
+            targets: [
+                "Fingerprint",
+            ]
         ),
+        /*
+        .executable(
+            name: "App",
+            targets: [
+                "App",
+            ]
+        ),
+        */
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -28,6 +41,14 @@ let package: Package = Package(
             dependencies: [
                 "Fingerprint",
                 .product(name: "Swifter", package: "swifter")
-            ]),
+            ]
+        ),
+        .executableTarget(
+            name: "App",
+            dependencies: [
+                "Fingerprint",
+            ],
+            path: "App/Sources"
+        )
     ]
 )

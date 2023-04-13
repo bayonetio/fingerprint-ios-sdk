@@ -5,7 +5,7 @@ public struct Token: Codable {
     public let environment: String?
 }
 
-@available(macOS 10.15.0, *)
+@available(iOS 15.0, *)
 public protocol FingerprintServiceProtocol {
     func analize() async throws -> Token
 }

@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "fingerprintjs-pro-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fingerprintjs/fingerprintjs-pro-ios",
+      "state" : {
+        "revision" : "ce59dac78398d599ad1bad6d138bb6817a1db23f",
+        "version" : "2.1.8"
+      }
+    },
+    {
       "identity" : "swifter",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/httpswift/swifter.git",
