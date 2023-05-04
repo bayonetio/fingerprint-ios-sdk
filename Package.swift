@@ -6,7 +6,7 @@ import PackageDescription
 let package: Package = Package(
     name: "fingerprint-ios-sdk",
     platforms: [
-        .iOS(.v13),
+        .iOS(.v16),
     ],
     products: [
         .library(
@@ -15,14 +15,12 @@ let package: Package = Package(
                 "Fingerprint",
             ]
         ),
-        /*
-        .executable(
-            name: "App",
-            targets: [
-                "App",
-            ]
-        ),
-        */
+        // .executable(
+        //     name: "App",
+        //     targets: [
+        //         "App",
+        //     ]
+        // ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -43,12 +41,12 @@ let package: Package = Package(
                 .product(name: "Swifter", package: "swifter")
             ]
         ),
-        .executableTarget(
-            name: "App",
-            dependencies: [
-                "Fingerprint",
-            ],
-            path: "App/Sources"
-        )
+        // .executableTarget(
+        //     name: "App",
+        //     dependencies: [
+        //         "Fingerprint",
+        //     ],
+        //     path: "App/Sources"
+        // )
     ]
 )
