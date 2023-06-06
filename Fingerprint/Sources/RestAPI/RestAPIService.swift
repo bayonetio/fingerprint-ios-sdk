@@ -30,9 +30,9 @@ public class RestAPIService: RestAPIServiceProtocol {
         if let environment: String = ProcessInfo.processInfo.environment["ENVIRONMENT"] {
             switch environment {
                 case liveEnvironment:
-                    baseURL = "https://live.bayonet.io/v3"
+                    baseURL = "https://api.bayonet.io/v3/fp"
                 case stagingEnvironment:
-                    baseURL = "https://staging.bayonet.io/v3"
+                    baseURL = "https://staging-api.bayonet.io/v3/fp"
                 case testEnvironment:
                     baseURL = "http://localhost:8080/v3"
                 default:
