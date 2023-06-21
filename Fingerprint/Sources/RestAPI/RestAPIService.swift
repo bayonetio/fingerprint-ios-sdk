@@ -4,11 +4,9 @@ import Foundation
 import FoundationNetworking
 #endif
 
-let liveEnvironment: String = "live"
+let liveEnvironment: String = "production"
 let stagingEnvironment: String = "staging"
-let testEnvironment: String = "test"
-
-let developmentBaseURL: String = "http://localhost:9000/v3"
+let testEnvironment: String = "develop"
 
 /// The service to connect to the Rest API
 public class RestAPIService: RestAPIServiceProtocol {
@@ -25,18 +23,15 @@ public class RestAPIService: RestAPIServiceProtocol {
 
         self.apiKey = apiKey
 
-        /// TODO: Refactor the base url by environment
-        var baseURL: String = developmentBaseURL
+        var baseURL: String = "https://api.bayonet.io/v3/fp"
         if let environment: String = ProcessInfo.processInfo.environment["ENVIRONMENT"] {
             switch environment {
-                case liveEnvironment:
-                    baseURL = "https://api.bayonet.io/v3/fp"
                 case stagingEnvironment:
                     baseURL = "https://staging-api.bayonet.io/v3/fp"
                 case testEnvironment:
-                    baseURL = "http://localhost:8080/v3"
-                default:
-                    baseURL = developmentBaseURL
+                    baseURL = "http://localhost:8080/v3/fp"
+                case developEnvironment:
+                    baseURL = "http://localhost:9000/v3/fp"
             }
         }
 
