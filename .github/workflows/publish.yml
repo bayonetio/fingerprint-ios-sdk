@@ -1,0 +1,22 @@
+name: Publish the pod
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare cocoapods
+        run: |
+          gem install cocoapods
+      - name: Publishing
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+        run: |
+          pod spec lint Fingerprint.podspec
+          pod trunk push

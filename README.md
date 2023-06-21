@@ -1,6 +1,8 @@
 # fingerprint-ios-sdk
 The *fingerprint-ios-sdk* is a library for *iOS* that determines the device's fingerprint and store it in our backend.
 
+This project was developed with *Swift 5.6*.
+
 ## Usage
 
 ### Installation
