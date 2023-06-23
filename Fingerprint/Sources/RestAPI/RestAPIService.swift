@@ -109,7 +109,7 @@ public class RestAPIService: RestAPIServiceProtocol {
                             currentError = RestAPIServiceErrors.UnauthorizedError
                             break
                         case 400...499:
-                            currentError = RestAPIServiceErrors.RequestError
+                            currentError = RestAPIServiceErrors.RequestError(message: "Request error \(tokenResponse.statusCode)")
                             break
                         case 500...599:
                             currentError = RestAPIServiceErrors.ServerError
