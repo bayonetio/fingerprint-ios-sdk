@@ -6,7 +6,7 @@ import PackageDescription
 let package: Package = Package(
     name: "fingerprint-ios-sdk",
     platforms: [
-        .iOS(.v16),
+        .iOS("16.0")
     ],
     products: [
         .library(
