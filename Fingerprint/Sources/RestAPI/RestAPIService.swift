@@ -23,7 +23,7 @@ public class RestAPIService: RestAPIServiceProtocol {
 
         self.apiKey = apiKey
 
-        var baseURL: String = "https://api.bayonet.io/v3/fp"
+        var baseURL: String
         switch BAYONET_ENVIRONMENT {
             case stagingEnvironment:
                 baseURL = "https://staging-api.bayonet.io/v3/fp"
@@ -31,6 +31,8 @@ public class RestAPIService: RestAPIServiceProtocol {
                 baseURL = "http://localhost:8080/v3/fp"
             case developEnvironment:
                 baseURL = "http://localhost:9000/v3/fp"
+            default:
+                baseURL = "https://api.bayonet.io/v3/fp"
         }
 
         guard let _: URL = URL(string: "\(baseURL)") else {
