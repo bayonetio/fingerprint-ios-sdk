@@ -16,7 +16,7 @@ public class RestAPIService: RestAPIServiceProtocol {
     private let baseURL: String
 
     // 
-    public init(withAPIKey apiKey: String, BAYONET_ENVIRONMENT: String) throws {
+    public init(withAPIKey apiKey: String, withBAYONETENVIRONMENT BAYONET_ENVIRONMENT: String) throws {
         if apiKey.count < 1 {
             throw RestAPIServiceErrors.InitError(message: "The API key cannot be empty")
         }
