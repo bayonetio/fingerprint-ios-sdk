@@ -4,9 +4,9 @@ import Foundation
 import FoundationNetworking
 #endif
 
-let liveEnvironment: String = "production"
 let stagingEnvironment: String = "staging"
-let testEnvironment: String = "develop"
+let testEnvironment: String = "test"
+let developEnvironment: String = "develop"
 
 /// The service to connect to the Rest API
 public class RestAPIService: RestAPIServiceProtocol {
@@ -15,8 +15,8 @@ public class RestAPIService: RestAPIServiceProtocol {
 
     private let baseURL: String
 
-    /// 
-    public init(withAPIKey apiKey: String) throws {
+    // 
+    public init(withAPIKey apiKey: String, BAYONET_ENVIRONMENT: String) throws {
         if apiKey.count < 1 {
             throw RestAPIServiceErrors.InitError(message: "The API key cannot be empty")
         }
@@ -24,15 +24,13 @@ public class RestAPIService: RestAPIServiceProtocol {
         self.apiKey = apiKey
 
         var baseURL: String = "https://api.bayonet.io/v3/fp"
-        if let environment: String = ProcessInfo.processInfo.environment["ENVIRONMENT"] {
-            switch environment {
-                case stagingEnvironment:
-                    baseURL = "https://staging-api.bayonet.io/v3/fp"
-                case testEnvironment:
-                    baseURL = "http://localhost:8080/v3/fp"
-                case developEnvironment:
-                    baseURL = "http://localhost:9000/v3/fp"
-            }
+        switch BAYONET_ENVIRONMENT {
+            case stagingEnvironment:
+                baseURL = "https://staging-api.bayonet.io/v3/fp"
+            case testEnvironment:
+                baseURL = "http://localhost:8080/v3/fp"
+            case developEnvironment:
+                baseURL = "http://localhost:9000/v3/fp"
         }
 
         guard let _: URL = URL(string: "\(baseURL)") else {
