@@ -68,7 +68,7 @@ public enum RestAPIServiceErrors: Error, Equatable {
     case InitError(message: String)
     case URLError(message: String)
     case NetworkError
-    case RequestError
+    case RequestError(message: String)
     case ServerError
     case TransformBodyResponseError(message: String)
     case ResponseBodyIsEmptyError
