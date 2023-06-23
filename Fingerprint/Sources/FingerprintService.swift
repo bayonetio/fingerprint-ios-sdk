@@ -10,7 +10,7 @@ public struct FingerprintService: FingerprintServiceProtocol {
     private var restAPIService: RestAPIServiceProtocol
 
     public init(apiKey: String, withBAYONETENVIRONMENT BAYONET_ENVIRONMENT: String = "production") throws {
-        let restAPIService = try RestAPIService(withAPIKey: apiKey, BAYONET_ENVIRONMENT)
+        let restAPIService = try RestAPIService(withAPIKey: apiKey, withBAYONETENVIRONMENT: BAYONET_ENVIRONMENT)
         self.restAPIService = restAPIService
     }
     
