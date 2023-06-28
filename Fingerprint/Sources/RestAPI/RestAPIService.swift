@@ -4,11 +4,9 @@ import Foundation
 import FoundationNetworking
 #endif
 
-let liveEnvironment: String = "live"
 let stagingEnvironment: String = "staging"
 let testEnvironment: String = "test"
-
-let developmentBaseURL: String = "http://localhost:9000/v3"
+let developEnvironment: String = "develop"
 
 /// The service to connect to the Rest API
 public class RestAPIService: RestAPIServiceProtocol {
@@ -17,27 +15,24 @@ public class RestAPIService: RestAPIServiceProtocol {
 
     private let baseURL: String
 
-    /// 
-    public init(withAPIKey apiKey: String) throws {
+    // 
+    public init(withAPIKey apiKey: String, withBAYONETENVIRONMENT BAYONET_ENVIRONMENT: String) throws {
         if apiKey.count < 1 {
             throw RestAPIServiceErrors.InitError(message: "The API key cannot be empty")
         }
 
         self.apiKey = apiKey
 
-        /// TODO: Refactor the base url by environment
-        var baseURL: String = developmentBaseURL
-        if let environment: String = ProcessInfo.processInfo.environment["ENVIRONMENT"] {
-            switch environment {
-                case liveEnvironment:
-                    baseURL = "https://api.bayonet.io/v3/fp"
-                case stagingEnvironment:
-                    baseURL = "https://staging-api.bayonet.io/v3/fp"
-                case testEnvironment:
-                    baseURL = "http://localhost:8080/v3"
-                default:
-                    baseURL = developmentBaseURL
-            }
+        var baseURL: String
+        switch BAYONET_ENVIRONMENT {
+            case stagingEnvironment:
+                baseURL = "https://staging-api.bayonet.io/v3/fp"
+            case testEnvironment:
+                baseURL = "http://localhost:8080/v3/fp"
+            case developEnvironment:
+                baseURL = "http://localhost:9000/v3/fp"
+            default:
+                baseURL = "https://api.bayonet.io/v3/fp"
         }
 
         guard let _: URL = URL(string: "\(baseURL)") else {
@@ -66,7 +61,7 @@ public class RestAPIService: RestAPIServiceProtocol {
                         case 401:
                             currentError = RestAPIServiceErrors.UnauthorizedError
                         case 400...499:
-                            currentError = RestAPIServiceErrors.RequestError
+                            currentError = RestAPIServiceErrors.RequestError(message: "Request error \(tokenResponse.statusCode)")
                         case 500...599:
                             currentError = RestAPIServiceErrors.ServerError
                         case 200:
@@ -114,7 +109,7 @@ public class RestAPIService: RestAPIServiceProtocol {
                             currentError = RestAPIServiceErrors.UnauthorizedError
                             break
                         case 400...499:
-                            currentError = RestAPIServiceErrors.RequestError
+                            currentError = RestAPIServiceErrors.RequestError(message: "Request error \(tokenResponse.statusCode)")
                             break
                         case 500...599:
                             currentError = RestAPIServiceErrors.ServerError
