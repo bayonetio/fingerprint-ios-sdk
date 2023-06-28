@@ -1,6 +1,6 @@
-platform :ios, '16.0'
+platform :ios, '15.0'
 
-target 'Fingerprint' do
+target 'BayonetFingerprint' do
   use_frameworks!
 
   pod 'FingerprintPro', '~> 2.0'

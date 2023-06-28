@@ -1,5 +1,5 @@
 #
-#  Be sure to run `pod spec lint IxmaelFingerprint.podspec' to ensure this is a
+#  Be sure to run `pod spec lint BayonetFingerprint.podspec' to ensure this is a
 #  valid spec and to remove all comments including this before submitting the spec.
 #
 #  To learn more about Podspec attributes see https://guides.cocoapods.org/syntax/podspec.html
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  spec.name         = "Fingerprint"
+  spec.name         = "BayonetFingerprint"
   spec.version      = "1.0.0"
   spec.summary      = "Fingerprint is a library to manage the devices' fingerprint."
 
@@ -28,7 +28,7 @@ Pod::Spec.new do |spec|
 This is a library to manage the devices' fingerprint to recollect data to improve the fraud detection.
                    DESC
 
-  spec.homepage     = "https://github.com/ixmael/fingerprint-ios-sdk"
+  spec.homepage     = "https://github.com/bayonetio/fingerprint-ios-sdk"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -82,7 +82,7 @@ This is a library to manage the devices' fingerprint to recollect data to improv
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "https://github.com/ixmael/fingerprint-ios-sdk", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/bayonetio/fingerprint-ios-sdk", :tag => "#{spec.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -93,7 +93,7 @@ This is a library to manage the devices' fingerprint to recollect data to improv
   #  Not including the public_header_files will make all headers public.
   #
 
-  spec.source_files  = "Fingerprint/Sources/**/*.swift"
+  spec.source_files  = "BayonetFingerprint/Sources/**/*.swift"
   # spec.exclude_files = "Classes/Exclude"
 
   # spec.public_header_files = "Classes/**/*.h"

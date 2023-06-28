@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package: Package = Package(
-    name: "Fingerprint",
+    name: "BayonetFingerprint",
     platforms: [
         .iOS(.v13),
     ],
     products: [
         .library(
-            name: "Fingerprint",
+            name: "BayonetFingerprint",
             targets: [
-                "Fingerprint",
+                "BayonetFingerprint",
             ]
         ),
         // .executable(
@@ -29,15 +29,15 @@ let package: Package = Package(
     ],
     targets: [
         .target(
-            name: "Fingerprint",
+            name: "BayonetFingerprint",
             dependencies: [
                 .product(name: "FingerprintPro", package: "fingerprintjs-pro-ios"),
             ],
-            path: "Fingerprint"),
+            path: "BayonetFingerprint"),
         .testTarget(
-            name: "FingerprintTest",
+            name: "BayonetFingerprintTest",
             dependencies: [
-                "Fingerprint",
+                "BayonetFingerprint",
                 .product(name: "Swifter", package: "swifter")
             ]
         ),
