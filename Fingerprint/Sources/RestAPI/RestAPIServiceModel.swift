@@ -72,7 +72,7 @@ public enum RestAPIServiceErrors: Error, Equatable {
     case ServerError
     case TransformBodyResponseError(message: String)
     case ResponseBodyIsEmptyError
-    case UnknwonError
+    case UnknownError
     case UnauthorizedError
 }
 

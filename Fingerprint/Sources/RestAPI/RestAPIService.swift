@@ -76,7 +76,7 @@ public class RestAPIService: RestAPIServiceProtocol {
                                 currentError = RestAPIServiceErrors.ResponseBodyIsEmptyError
                             }
                         default:
-                            currentError = RestAPIServiceErrors.UnknwonError
+                            currentError = RestAPIServiceErrors.UnknownError
                     }
                 }
 
@@ -85,7 +85,7 @@ public class RestAPIService: RestAPIServiceProtocol {
                 } else if let currentError: Error = currentError {
                     continuation.resume(throwing: currentError)
                 } else {
-                    continuation.resume(throwing: RestAPIServiceErrors.UnknwonError)
+                    continuation.resume(throwing: RestAPIServiceErrors.UnknownError)
                 }
             }
             task.resume()
@@ -117,7 +117,7 @@ public class RestAPIService: RestAPIServiceProtocol {
                         case 200:
                             break
                         default:
-                            currentError = RestAPIServiceErrors.UnknwonError
+                            currentError = RestAPIServiceErrors.UnknownError
                     }
                 }
 

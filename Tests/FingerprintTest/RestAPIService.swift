@@ -73,7 +73,7 @@ final class RestAPIServiceTests: XCTestCase {
             _ = try await service.getToken()
         } catch {
             XCTAssertNotNil(error)
-            XCTAssertEqual(error as! RestAPIServiceErrors, RestAPIServiceErrors.UnknwonError)
+            XCTAssertEqual(error as! RestAPIServiceErrors, RestAPIServiceErrors.UnknownError)
         }
     }
 
