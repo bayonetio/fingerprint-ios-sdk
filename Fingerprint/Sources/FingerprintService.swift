@@ -15,7 +15,7 @@ public struct FingerprintService: FingerprintServiceProtocol {
     }
     
     @available(iOS 15.0, *)
-    public func analize() async throws -> Token {
+    public func analyze() async throws -> Token {
         var token: Token
 
         if let storedToken: Token = self.getTokenStored() {

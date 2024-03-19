@@ -7,5 +7,5 @@ public struct Token: Codable {
 
 @available(iOS 15.0, *)
 public protocol FingerprintServiceProtocol {
-    func analize() async throws -> Token
+    func analyze() async throws -> Token
 }
